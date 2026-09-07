@@ -1,52 +1,47 @@
-package org.student_api.clinc_system_management.model;
-
-import jakarta.persistence.*;
+package org.student_api.clinc_system_management.dto.Request;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
 import org.student_api.clinc_system_management.role.Gender;
 
 import java.time.LocalDate;
-
+import org.student_api.clinc_system_management.role.Gender;
+@Getter
+@Setter
 @SuppressWarnings("unused")
 
+public class PatientRequestDto {
 
-@Entity
-@Table(name = "patients")
-public class Patient {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(nullable = false, length = 50)
+    @NotBlank(message = "First name is required")
+    @Size(max = 50, message = "First name must not exceed 50 characters")
     private String firstName;
 
-    @Column(nullable = false, length = 50)
+    @NotBlank(message = "Last name is required")
+    @Size(max = 50, message = "Last name must not exceed 50 characters")
     private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be a valid email address")
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @NotBlank(message = "Phone number is required")
+    @Size(max = 20, message = "Phone number must not exceed 20 characters")
     private String phone;
 
-    @Column(nullable = false)
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @NotNull(message = "Gender is required")
     private Gender gender;
 
-    @Column(nullable = false)
-    private LocalDate registrationDate;
-
-    public Patient() {
+    public PatientRequestDto() {
     }
 
-    public Patient(String firstName, String lastName, String email, String phone,
+    public PatientRequestDto(String firstName, String lastName, String email, String phone,
                    LocalDate dateOfBirth, Gender gender, LocalDate registrationDate) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,15 +49,6 @@ public class Patient {
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-        this.registrationDate = registrationDate;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -112,12 +98,5 @@ public class Patient {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
 }
+
