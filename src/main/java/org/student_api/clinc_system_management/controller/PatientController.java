@@ -1,7 +1,8 @@
 package org.student_api.clinc_system_management.controller;
 
-import  org.student_api.clinc_system_management.DTO.PatientRequestDto;
-import  org.student_api.clinc_system_management.DTO.PatientResponseDto;
+
+import org.student_api.clinc_system_management.dto.Request.PatientRequestDto;
+import org.student_api.clinc_system_management.dto.Response.PatientResponseDto;
 import  org.student_api.clinc_system_management.service.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -9,14 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/patients")
 public class PatientController {
-
     private final PatientService patientService;
-
     public PatientController(PatientService patientService) {
+
         this.patientService = patientService;
     }
 
@@ -32,7 +33,19 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientResponseDto> getPatientById(@PathVariable Long id) {
+    public ResponseEntity<PatientResponseDto> getPatientById(@PathVariable UUID id) {
         return ResponseEntity.ok(patientService.getPatientById(id));
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponseDto> updatePatient(@PathVariable UUID id , @Valid @RequestBody PatientRequestDto request){
+        return ResponseEntity.ok(patientService.updatePatient(id , request));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable UUID id) {
+
+        patientService.deletePatient(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
