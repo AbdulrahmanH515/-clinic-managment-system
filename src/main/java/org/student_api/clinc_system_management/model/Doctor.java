@@ -1,7 +1,9 @@
 package org.student_api.clinc_system_management.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -9,6 +11,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@SuppressWarnings("unused")
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "doctors")
 public class Doctor {
@@ -40,8 +45,7 @@ public class Doctor {
     @Column(nullable = false, length = 100)
     private String specialization;
 
-    public Doctor() {
-    }
+
 
     public Doctor(String firstName, String lastName, String email, String phone,
                   String medicalLicenseNumber, Integer yearsOfExperience,
@@ -57,75 +61,5 @@ public class Doctor {
         this.specialization = specialization;
     }
 
-    public UUID getId() {
-        return id;
-    }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getMedicalLicenseNumber() {
-        return medicalLicenseNumber;
-    }
-
-    public void setMedicalLicenseNumber(String medicalLicenseNumber) {
-        this.medicalLicenseNumber = medicalLicenseNumber;
-    }
-
-    public Integer getYearsOfExperience() {
-        return yearsOfExperience;
-    }
-
-    public void setYearsOfExperience(Integer yearsOfExperience) {
-        this.yearsOfExperience = yearsOfExperience;
-    }
-
-    public BigDecimal getConsultationFee() {
-        return consultationFee;
-    }
-
-    public void setConsultationFee(BigDecimal consultationFee) {
-        this.consultationFee = consultationFee;
-    }
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
 }

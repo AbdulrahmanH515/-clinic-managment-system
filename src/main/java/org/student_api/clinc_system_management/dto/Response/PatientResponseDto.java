@@ -11,7 +11,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class PatientResponseDto {
 
     private UUID id;
@@ -23,6 +24,5 @@ public class PatientResponseDto {
     private Gender gender;
     private LocalDate registrationDate;
 
-    public PatientResponseDto(UUID id, String firstName, String lastName, String email, String phone, LocalDate dateOfBirth, Gender gender, LocalDate registrationDate) {
-    }
+
 }

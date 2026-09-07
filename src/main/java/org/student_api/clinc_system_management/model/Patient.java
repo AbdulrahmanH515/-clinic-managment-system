@@ -2,17 +2,20 @@ package org.student_api.clinc_system_management.model;
 
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
 import org.student_api.clinc_system_management.role.Gender;
 
 import java.time.LocalDate;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @SuppressWarnings("unused")
-
-
 @Entity
 @Table(name = "patients")
 public class Patient {
@@ -43,9 +46,6 @@ public class Patient {
     @Column(nullable = false)
     private LocalDate registrationDate;
 
-    public Patient() {
-    }
-
     public Patient(String firstName, String lastName, String email, String phone,
                    LocalDate dateOfBirth, Gender gender, LocalDate registrationDate) {
         this.firstName = firstName;
@@ -57,67 +57,6 @@ public class Patient {
         this.registrationDate = registrationDate;
     }
 
-    public UUID getId() {
-        return id;
-    }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
 }

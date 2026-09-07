@@ -1,10 +1,16 @@
 package org.student_api.clinc_system_management.dto.Response;
-
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-
+@Getter
+@Setter
+@SuppressWarnings("unused")
+@AllArgsConstructor
+@NoArgsConstructor
 public class DoctorResponseDto {
 
     private UUID id;
@@ -18,6 +24,5 @@ public class DoctorResponseDto {
     private String specialization;
 
 
-    public DoctorResponseDto(UUID id, String firstName, String lastName, String email, String phone, String medicalLicenseNumber, Integer yearsOfExperience, BigDecimal consultationFee, String specialization) {
-    }
+
 }

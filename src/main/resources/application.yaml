@@ -1,3 +1,6 @@
 spring:
   application:
     name: clinc_system_management
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true

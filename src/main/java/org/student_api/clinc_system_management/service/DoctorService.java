@@ -2,8 +2,7 @@ package org.student_api.clinc_system_management.service;
 
 import org.student_api.clinc_system_management.dto.Request.DoctorRequestDto;
 import org.student_api.clinc_system_management.dto.Response.DoctorResponseDto;
-import org.student_api.clinc_system_management.exception.DoctorNotFoundException;
-import org.student_api.clinc_system_management.exception.DuplicateLicenseException;
+import org.student_api.clinc_system_management.exception.*;
 import org.student_api.clinc_system_management.model.Doctor;
 import org.student_api.clinc_system_management.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
