@@ -21,7 +21,8 @@ public class DoctorResponseDto {
     private String medicalLicenseNumber;
     private Integer yearsOfExperience;
     private BigDecimal consultationFee;
-    private String specialization;
+    private UUID specializationId;
+    private String specializationName;
 
 
 

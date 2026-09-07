@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -44,9 +45,8 @@ public class DoctorRequestDto {
     @DecimalMin(value = "0.01", message = "Consultation fee must be greater than 0")
     private BigDecimal consultationFee;
 
-    @NotBlank(message = "Specialization is required")
-    @Size(max = 100, message = "Specialization must not exceed 100 characters")
-    private String specialization;
+    @NotNull(message = "Specialization id is required")
+    private UUID specializationId;
 
 
 }

@@ -42,14 +42,15 @@ public class Doctor {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
-    @Column(nullable = false, length = 100)
-    private String specialization;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "specialization_id", nullable = false)
+    private Specialization specialization;
 
 
 
     public Doctor(String firstName, String lastName, String email, String phone,
                   String medicalLicenseNumber, Integer yearsOfExperience,
-                  BigDecimal consultationFee, String specialization) {
+                  BigDecimal consultationFee, Specialization specialization) {
 
         this.firstName = firstName;
         this.lastName = lastName;

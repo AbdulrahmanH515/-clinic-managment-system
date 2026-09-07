@@ -1,6 +1,7 @@
 package org.student_api.clinc_system_management.controller;
 
 import jakarta.validation.Valid;
+import org.student_api.clinc_system_management.dto.Request.AssignSpecializationRequestDto;
 import org.student_api.clinc_system_management.dto.Request.DoctorRequestDto;
 import org.student_api.clinc_system_management.dto.Response.DoctorResponseDto;
 import org.student_api.clinc_system_management.service.DoctorService;
@@ -60,5 +61,15 @@ public class DoctorController {
         doctorService.deleteDoctor(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/specialization")
+    public ResponseEntity<DoctorResponseDto> assignSpecialization(
+            @PathVariable UUID id,
+            @Valid @RequestBody AssignSpecializationRequestDto request) {
+
+        return ResponseEntity.ok(
+                doctorService.assignSpecialization(id, request.getSpecializationId())
+        );
     }
 }
