@@ -47,9 +47,7 @@ public class Doctor {
 
 
 
-    public Doctor(String firstName, String lastName, String email, String phone,
-                  String medicalLicenseNumber, Integer yearsOfExperience,
-                  BigDecimal consultationFee, String specialization) {
+    public Doctor(String firstName, String lastName, String email, String phone,String medicalLicenseNumber, Integer yearsOfExperience,BigDecimal consultationFee, String specialization) {
 
         this.firstName = firstName;
         this.lastName = lastName;
