@@ -4,7 +4,9 @@ import org.student_api.clinc_system_management.dto.Request.DoctorRequestDto;
 import org.student_api.clinc_system_management.dto.Response.DoctorResponseDto;
 import org.student_api.clinc_system_management.exception.*;
 import org.student_api.clinc_system_management.model.Doctor;
+import org.student_api.clinc_system_management.model.Specialization;
 import org.student_api.clinc_system_management.repository.DoctorRepository;
+import org.student_api.clinc_system_management.repository.SpecializationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,12 @@ import java.util.UUID;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private final SpecializationRepository specializationRepository;
 
-    public DoctorService(DoctorRepository doctorRepository) {
+    public DoctorService(DoctorRepository doctorRepository,
+                         SpecializationRepository specializationRepository) {
         this.doctorRepository = doctorRepository;
+        this.specializationRepository = specializationRepository;
     }
 
     public DoctorResponseDto registerDoctor(DoctorRequestDto request) {
@@ -28,6 +33,11 @@ public class DoctorService {
                     request.getMedicalLicenseNumber());
         }
 
+        Specialization specialization = specializationRepository
+                .findById(request.getSpecializationId())
+                .orElseThrow(() -> new SpecializationNotFoundException(
+                        request.getSpecializationId()));
+
         Doctor doctor = new Doctor(
                 request.getFirstName(),
                 request.getLastName(),
@@ -36,7 +46,7 @@ public class DoctorService {
                 request.getMedicalLicenseNumber(),
                 request.getYearsOfExperience(),
                 request.getConsultationFee(),
-                request.getSpecialization()
+                specialization
         );
 
         Doctor saved = doctorRepository.save(doctor);
@@ -75,6 +85,11 @@ public class DoctorService {
                     request.getMedicalLicenseNumber());
         }
 
+        Specialization specialization = specializationRepository
+                .findById(request.getSpecializationId())
+                .orElseThrow(() -> new SpecializationNotFoundException(
+                        request.getSpecializationId()));
+
         doctor.setFirstName(request.getFirstName());
         doctor.setLastName(request.getLastName());
         doctor.setEmail(request.getEmail());
@@ -85,8 +100,7 @@ public class DoctorService {
                 request.getYearsOfExperience());
         doctor.setConsultationFee(
                 request.getConsultationFee());
-        doctor.setSpecialization(
-                request.getSpecialization());
+        doctor.setSpecialization(specialization);
 
         Doctor updated = doctorRepository.save(doctor);
 
@@ -102,7 +116,23 @@ public class DoctorService {
         doctorRepository.deleteById(id);
     }
 
-    private DoctorResponseDto toResponseDto(Doctor doctor) {
+    public DoctorResponseDto assignSpecialization(UUID doctorId, UUID specializationId) {
+
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new DoctorNotFoundException(doctorId));
+
+        Specialization specialization = specializationRepository
+                .findById(specializationId)
+                .orElseThrow(() -> new SpecializationNotFoundException(specializationId));
+
+        doctor.setSpecialization(specialization);
+
+        Doctor updated = doctorRepository.save(doctor);
+
+        return toResponseDto(updated);
+    }
+
+    public DoctorResponseDto toResponseDto(Doctor doctor) {
 
         return new DoctorResponseDto(
                 doctor.getId(),
@@ -113,7 +143,8 @@ public class DoctorService {
                 doctor.getMedicalLicenseNumber(),
                 doctor.getYearsOfExperience(),
                 doctor.getConsultationFee(),
-                doctor.getSpecialization()
+                doctor.getSpecialization().getId(),
+                doctor.getSpecialization().getName()
         );
     }
 }
