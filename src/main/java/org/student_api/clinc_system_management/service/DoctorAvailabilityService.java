@@ -23,7 +23,7 @@ public class DoctorAvailabilityService {
         this.availabilityRepository = availabilityRepository;
         this.doctorRepository = doctorRepository;
     }
-/// //////////// ////// ////// ////// //////
+
     public DoctorAvailabilityResponseDto addAvailability(UUID doctorId, DoctorAvailabilityRequestDto request) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
         if (!request.getStartTime().isBefore(request.getEndTime())) {
@@ -47,7 +47,7 @@ public class DoctorAvailabilityService {
         DoctorAvailability saved = availabilityRepository.save(availability);
         return toResponseDto(saved);
     }
-    /// / //// // // / ///// // /
+
     public List<DoctorAvailabilityResponseDto> getDoctorAvailability(UUID doctorId) {
         if (!doctorRepository.existsById(doctorId)) {
             throw new DoctorNotFoundException(doctorId);

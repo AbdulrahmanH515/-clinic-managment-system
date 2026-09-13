@@ -1,14 +1,19 @@
 package org.student_api.clinc_system_management.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.student_api.clinc_system_management.dto.Request.AssignSpecializationRequestDto;
 import org.student_api.clinc_system_management.dto.Request.DoctorRequestDto;
+import org.student_api.clinc_system_management.dto.Response.AppointmentResponseDto;
 import org.student_api.clinc_system_management.dto.Response.DoctorResponseDto;
+import org.student_api.clinc_system_management.role.AppointmentStatus;
+import org.student_api.clinc_system_management.service.AppointmentService;
 import org.student_api.clinc_system_management.service.DoctorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,9 +22,11 @@ import java.util.UUID;
 public class DoctorController {
 
     private final DoctorService doctorService;
+    private final AppointmentService appointmentService;
 
-    public DoctorController(DoctorService doctorService) {
+    public DoctorController(DoctorService doctorService, AppointmentService appointmentService) {
         this.doctorService = doctorService;
+        this.appointmentService = appointmentService;
     }
 
     @PostMapping
@@ -71,5 +78,14 @@ public class DoctorController {
         return ResponseEntity.ok(
                 doctorService.assignSpecialization(id, request.getSpecializationId())
         );
+    }
+
+
+    @GetMapping("/{id}/appointments")
+    public ResponseEntity<List<AppointmentResponseDto>> getDoctorAppointments(
+            @PathVariable UUID id,
+            @RequestParam(required = false) AppointmentStatus status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByDoctor(id, status, date));
     }
 }

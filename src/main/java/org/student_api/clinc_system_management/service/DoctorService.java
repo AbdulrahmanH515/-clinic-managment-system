@@ -5,8 +5,7 @@ import org.student_api.clinc_system_management.dto.Response.DoctorResponseDto;
 import org.student_api.clinc_system_management.exception.*;
 import org.student_api.clinc_system_management.model.Doctor;
 import org.student_api.clinc_system_management.model.Specialization;
-import org.student_api.clinc_system_management.repository.DoctorRepository;
-import org.student_api.clinc_system_management.repository.SpecializationRepository;
+import org.student_api.clinc_system_management.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +24,9 @@ public class DoctorService {
     }
 
     public DoctorResponseDto registerDoctor(DoctorRequestDto request) {
+
+        System.out.println(">>> DEBUG consultationFee = " + request.getConsultationFee());
+        System.out.println(">>> DEBUG request object = " + request);
 
         if (doctorRepository.existsByMedicalLicenseNumber(
                 request.getMedicalLicenseNumber())) {
@@ -48,6 +50,8 @@ public class DoctorService {
                 request.getConsultationFee(),
                 specialization
         );
+
+        System.out.println(">>> DEBUG doctor.getConsultationFee() before save = " + doctor.getConsultationFee());
 
         Doctor saved = doctorRepository.save(doctor);
 
