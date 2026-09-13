@@ -6,8 +6,7 @@ import org.student_api.clinc_system_management.dto.Response.SpecializationRespon
 import org.student_api.clinc_system_management.exception.DuplicateSpecializationException;
 import org.student_api.clinc_system_management.exception.SpecializationNotFoundException;
 import org.student_api.clinc_system_management.model.Specialization;
-import org.student_api.clinc_system_management.repository.DoctorRepository;
-import org.student_api.clinc_system_management.repository.SpecializationRepository;
+import org.student_api.clinc_system_management.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

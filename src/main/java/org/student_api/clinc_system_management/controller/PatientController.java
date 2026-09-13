@@ -2,13 +2,18 @@ package org.student_api.clinc_system_management.controller;
 
 
 import org.student_api.clinc_system_management.dto.Request.PatientRequestDto;
+import org.student_api.clinc_system_management.dto.Response.AppointmentResponseDto;
 import org.student_api.clinc_system_management.dto.Response.PatientResponseDto;
+import  org.student_api.clinc_system_management.service.AppointmentService;
 import  org.student_api.clinc_system_management.service.PatientService;
+import org.student_api.clinc_system_management.role.AppointmentStatus;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,9 +21,12 @@ import java.util.UUID;
 @RequestMapping("/api/patients")
 public class PatientController {
     private final PatientService patientService;
-    public PatientController(PatientService patientService) {
+    private final AppointmentService appointmentService;
+
+    public PatientController(PatientService patientService, AppointmentService appointmentService) {
 
         this.patientService = patientService;
+        this.appointmentService = appointmentService;
     }
 
     @PostMapping
@@ -46,6 +54,15 @@ public class PatientController {
         patientService.deletePatient(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/{id}/appointments")
+    public ResponseEntity<List<AppointmentResponseDto>> getPatientAppointments(
+            @PathVariable UUID id,
+            @RequestParam(required = false) AppointmentStatus status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByPatient(id, status, date));
     }
 
 }

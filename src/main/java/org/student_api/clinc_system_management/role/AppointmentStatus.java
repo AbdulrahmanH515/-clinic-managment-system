@@ -2,5 +2,8 @@ package org.student_api.clinc_system_management.role;
 
 public enum AppointmentStatus {
     SCHEDULED,
-    CANCELLED
+    CONFIRMED,
+    CANCELLED,
+    COMPLETED,
+    NO_SHOW
 }
