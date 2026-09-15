@@ -11,6 +11,7 @@ import org.student_api.clinc_system_management.role.AppointmentStatus;
 import org.student_api.clinc_system_management.service.AppointmentService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,6 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponseDto> getAppointmentById(@PathVariable UUID id) {
         return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
-
 
     @GetMapping
     public ResponseEntity<List<AppointmentResponseDto>> getAllAppointments(
@@ -61,4 +61,6 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponseDto> markNoShow(@PathVariable UUID id) {
         return ResponseEntity.ok(appointmentService.markNoShow(id));
     }
+
+
 }

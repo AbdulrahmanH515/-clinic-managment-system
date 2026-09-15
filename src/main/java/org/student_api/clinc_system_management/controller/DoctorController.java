@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,11 +31,8 @@ public class DoctorController {
     }
 
     @PostMapping
-    public ResponseEntity<DoctorResponseDto> registerDoctor(
-            @Valid @RequestBody DoctorRequestDto request) {
-
+    public ResponseEntity<DoctorResponseDto> registerDoctor( @Valid @RequestBody DoctorRequestDto request) {
         DoctorResponseDto response = doctorService.registerDoctor(request);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -45,39 +43,26 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorResponseDto> getDoctorById(
-            @PathVariable UUID id) {
-
+    public ResponseEntity<DoctorResponseDto> getDoctorById(@PathVariable UUID id) {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DoctorResponseDto> updateDoctor(
-            @PathVariable UUID id,
-            @Valid @RequestBody DoctorRequestDto request) {
-
-        return ResponseEntity.ok(
-                doctorService.updateDoctor(id, request)
-        );
+    public ResponseEntity<DoctorResponseDto> updateDoctor(@PathVariable UUID id, @Valid @RequestBody DoctorRequestDto request) {
+        return ResponseEntity.ok(doctorService.updateDoctor(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDoctor(
-            @PathVariable UUID id) {
-
+    public ResponseEntity<Void> deleteDoctor(@PathVariable UUID id) {
         doctorService.deleteDoctor(id);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/specialization")
-    public ResponseEntity<DoctorResponseDto> assignSpecialization(
-            @PathVariable UUID id,
-            @Valid @RequestBody AssignSpecializationRequestDto request) {
-
+    public ResponseEntity<DoctorResponseDto> assignSpecialization(@PathVariable UUID id, @Valid @RequestBody AssignSpecializationRequestDto request) {
         return ResponseEntity.ok(
-                doctorService.assignSpecialization(id, request.getSpecializationId())
-        );
+                doctorService.assignSpecialization(id, request.getSpecializationId()));
     }
 
 
@@ -87,5 +72,10 @@ public class DoctorController {
             @RequestParam(required = false) AppointmentStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByDoctor(id, status, date));
+    }
+
+    @GetMapping("/{id}/available-slots")
+    public ResponseEntity<List<LocalTime>> getAvailableSlots(@PathVariable UUID id, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(appointmentService.getAvailableSlots(id, date));
     }
 }

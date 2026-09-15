@@ -23,6 +23,4 @@ public class PatientResponseDto {
     private LocalDate dateOfBirth;
     private Gender gender;
     private LocalDate registrationDate;
-
-
 }
