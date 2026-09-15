@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
     List<Appointment> findByDoctorIdAndDateAndTime(UUID doctorId, LocalDate date, LocalTime time);
+    List<Appointment> findByDoctorIdAndDate(UUID doctorId, LocalDate date);
     List<Appointment> findByPatientIdAndDateAndTime(UUID patientId, LocalDate date, LocalTime time);
 
     @Query("SELECT a FROM Appointment a WHERE (:status IS NULL OR a.status = :status) AND (:date IS NULL OR a.date = :date)")

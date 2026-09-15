@@ -1,6 +1,10 @@
 package org.student_api.clinc_system_management.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.student_api.clinc_system_management.dto.Request.AppointmentRequestDto;
 import org.student_api.clinc_system_management.dto.Response.AppointmentResponseDto;
 import org.student_api.clinc_system_management.exception.AppointmentNotFoundException;
@@ -16,12 +20,7 @@ import org.student_api.clinc_system_management.role.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AppointmentService {
@@ -31,15 +30,14 @@ public class AppointmentService {
     private final DoctorAvailabilityRepository availabilityRepository;
 
 
-    private static final Map<AppointmentStatus, Set<AppointmentStatus>> VALID_TRANSITIONS = new EnumMap<>(AppointmentStatus.class);
-    static {
+    private static final Map<AppointmentStatus, Set<AppointmentStatus>> VALID_TRANSITIONS = new EnumMap<>(AppointmentStatus.class);static {
         VALID_TRANSITIONS.put(AppointmentStatus.SCHEDULED, EnumSet.of(AppointmentStatus.CONFIRMED, AppointmentStatus.CANCELLED, AppointmentStatus.NO_SHOW));
         VALID_TRANSITIONS.put(AppointmentStatus.CONFIRMED, EnumSet.of(AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED, AppointmentStatus.NO_SHOW));
         VALID_TRANSITIONS.put(AppointmentStatus.CANCELLED, EnumSet.noneOf(AppointmentStatus.class));
         VALID_TRANSITIONS.put(AppointmentStatus.COMPLETED, EnumSet.noneOf(AppointmentStatus.class));
         VALID_TRANSITIONS.put(AppointmentStatus.NO_SHOW, EnumSet.noneOf(AppointmentStatus.class));
     }
-
+    private static final int APPOINTMENT_DURATION_MINUTES = 30;
     public AppointmentService(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, DoctorAvailabilityRepository availabilityRepository) {
         this.appointmentRepository = appointmentRepository;
         this.patientRepository = patientRepository;
@@ -92,6 +90,37 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.SCHEDULED);
         Appointment saved = appointmentRepository.save(appointment);
         return toResponseDto(saved);
+    }
+
+    public List<LocalTime> getAvailableSlots(UUID doctorId, LocalDate date) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
+        List<DoctorAvailability> availabilityList = availabilityRepository.findByDoctorId(doctorId);
+        LocalTime startTime = null;
+        LocalTime endTime = null;
+        for (DoctorAvailability availability : availabilityList) {
+            if (availability.getDayOfWeek() == date.getDayOfWeek()) {
+                startTime = availability.getStartTime();
+                endTime = availability.getEndTime();
+                break;
+            }
+        }
+        if (startTime == null || endTime == null) {
+            return List.of();
+        }
+        List<Appointment> appointments =appointmentRepository.findByDoctorIdAndDate(doctorId, date);
+        List<LocalTime> availableSlots = new ArrayList<>();
+
+        LocalTime currentTime = startTime;
+
+        while (currentTime.plusMinutes(APPOINTMENT_DURATION_MINUTES).compareTo(endTime) <= 0) {
+            availableSlots.add(currentTime);
+            currentTime = currentTime.plusMinutes(APPOINTMENT_DURATION_MINUTES);
+        }
+        availableSlots.removeIf(slot ->
+                appointments.stream().anyMatch(appointment ->
+                        appointment.getTime().equals(slot) && appointment.getStatus() != AppointmentStatus.CANCELLED));
+
+        return availableSlots;
     }
 
     public AppointmentResponseDto getAppointmentById(UUID id) {
