@@ -11,9 +11,3 @@ public class ClincSystemManagementApplication {
     }
 
 }
-/*
-
-{
-        "name": "Cardiology",
-        "description": "Heart and cardiovascular diseases"
-        }*/

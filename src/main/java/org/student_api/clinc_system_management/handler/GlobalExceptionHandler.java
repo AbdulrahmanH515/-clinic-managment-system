@@ -17,8 +17,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex,
-                                                          HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         List<String> details = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .toList();
@@ -34,8 +33,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PatientNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlePatientNotFound(PatientNotFoundException ex,
-                                                               HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handlePatientNotFound(PatientNotFoundException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Patient Not Found",
@@ -46,8 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateEmail(DuplicateEmailException ex,
-                                                              HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDuplicateEmail(DuplicateEmailException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Duplicate Email",
@@ -58,8 +55,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DoctorNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleDoctorNotFound(DoctorNotFoundException ex,
-                                                              HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDoctorNotFound(DoctorNotFoundException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Doctor Not Found",
@@ -70,8 +66,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateLicenseException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateLicense(DuplicateLicenseException ex,
-                                                                HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDuplicateLicense(DuplicateLicenseException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Duplicate License",
@@ -82,8 +77,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateSpecializationException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateSpecialization(DuplicateSpecializationException ex,
-                                                                       HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDuplicateSpecialization(DuplicateSpecializationException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Duplicate Specialization",
@@ -94,8 +88,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ScheduleConflictException.class)
-    public ResponseEntity<ErrorResponse> handleScheduleConflict(ScheduleConflictException ex,
-                                                                HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleScheduleConflict(ScheduleConflictException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Schedule Conflict",
@@ -106,8 +99,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AppointmentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAppointmentNotFound(AppointmentNotFoundException ex,
-                                                                   HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAppointmentNotFound(AppointmentNotFoundException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Appointment Not Found",
@@ -118,8 +110,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidStatusTransitionException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidStatusTransition(InvalidStatusTransitionException ex,
-                                                                       HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleInvalidStatusTransition(InvalidStatusTransitionException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Invalid Status Transition",
@@ -131,8 +122,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
-                                                            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         String expectedType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "the expected type";
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
@@ -144,8 +134,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex,
-                                                               HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Invalid Request",
@@ -153,6 +142,32 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(SpecializationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSpecializationNotFound(SpecializationNotFoundException ex, HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Specialization Not Found",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(DoctorUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handleDoctorUnavailable(DoctorUnavailableException ex, HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Doctor Unavailable",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(Exception.class)
