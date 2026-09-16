@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.student_api.clinc_system_management.dto.Request.AppointmentRequestDto;
 import org.student_api.clinc_system_management.dto.Response.AppointmentResponseDto;
-import org.student_api.clinc_system_management.exception.AppointmentNotFoundException;
-import org.student_api.clinc_system_management.exception.DoctorNotFoundException;
-import org.student_api.clinc_system_management.exception.InvalidStatusTransitionException;
-import org.student_api.clinc_system_management.exception.PatientNotFoundException;
+import org.student_api.clinc_system_management.exception.*;
 import org.student_api.clinc_system_management.model.Appointment;
 import org.student_api.clinc_system_management.model.Doctor;
 import org.student_api.clinc_system_management.model.DoctorAvailability;
@@ -65,14 +62,14 @@ public class AppointmentService {
             }
         }
         if (!available) {
-            throw new IllegalArgumentException("Doctor is not available at the request date and time ");
+            throw new DoctorUnavailableException("Doctor is not available at the request date and time ");
         }
 
         List<Appointment> doctorAppointments =
                 appointmentRepository.findByDoctorIdAndDateAndTime(request.getDoctorId(), request.getDate(), request.getTime());
         for (Appointment existing : doctorAppointments) {
             if (existing.getStatus() != AppointmentStatus.CANCELLED) {
-                throw new IllegalArgumentException("Doctor already has an appointment at this time");
+                throw new ScheduleConflictException("Doctor already has an appointment at this time");
             }
         }
 
@@ -80,7 +77,7 @@ public class AppointmentService {
                 appointmentRepository.findByPatientIdAndDateAndTime(request.getPatientId(), request.getDate(), request.getTime());
         for (Appointment existing : patientAppointments) {
             if (existing.getStatus() != AppointmentStatus.CANCELLED) {
-                throw new IllegalArgumentException("Patient already has an appointment at this time");
+                throw new ScheduleConflictException("Patient already has an appointment at this time");
             }
         }
 
