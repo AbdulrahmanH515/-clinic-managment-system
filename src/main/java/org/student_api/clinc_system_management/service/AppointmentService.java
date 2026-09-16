@@ -1,5 +1,7 @@
 package org.student_api.clinc_system_management.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -127,11 +129,9 @@ public class AppointmentService {
         return toResponseDto(findAppointmentOrThrow(id));
     }
 
-
-    public List<AppointmentResponseDto> getAllAppointments(AppointmentStatus status, LocalDate date) {
-        return appointmentRepository.findAllWithFilters(status, date).stream().map(this::toResponseDto).toList();
+    public Page<AppointmentResponseDto> getAllAppointments(AppointmentStatus status, LocalDate date, Pageable pageable) {
+        return appointmentRepository.findAllWithFilters(status, date, pageable).map(this::toResponseDto);
     }
-
 
     public List<AppointmentResponseDto> getAppointmentsByPatient(UUID patientId, AppointmentStatus status, LocalDate date) {
         if (!patientRepository.existsById(patientId)) {

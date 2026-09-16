@@ -1,5 +1,7 @@
 package org.student_api.clinc_system_management.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +19,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     List<Appointment> findByPatientIdAndDateAndTime(UUID patientId, LocalDate date, LocalTime time);
 
     @Query("SELECT a FROM Appointment a WHERE (:status IS NULL OR a.status = :status) AND (:date IS NULL OR a.date = :date)")
-    List<Appointment> findAllWithFilters(@Param("status") AppointmentStatus status, @Param("date") LocalDate date);
+    Page<Appointment> findAllWithFilters(@Param("status") AppointmentStatus status, @Param("date") LocalDate date, Pageable pageable);
 
     @Query("SELECT a FROM Appointment a WHERE a.patient.id = :patientId AND (:status IS NULL OR a.status = :status) AND (:date IS NULL OR a.date = :date)")
     List<Appointment> findByPatientIdWithFilters(@Param("patientId") UUID patientId, @Param("status") AppointmentStatus status, @Param("date") LocalDate date);

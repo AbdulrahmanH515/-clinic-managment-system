@@ -1,6 +1,8 @@
 package org.student_api.clinc_system_management.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +37,9 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppointmentResponseDto>> getAllAppointments(
-            @RequestParam(required = false) AppointmentStatus status,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(appointmentService.getAllAppointments(status, date));
+    public ResponseEntity<Page<AppointmentResponseDto>> getAllAppointments(@RequestParam(required = false) AppointmentStatus status, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, Pageable pageable) {
+        return ResponseEntity.ok(appointmentService.getAllAppointments(status, date, pageable));
     }
-
 
     @PatchMapping("/{id}/confirm")
     public ResponseEntity<AppointmentResponseDto> confirmAppointment(@PathVariable UUID id) {

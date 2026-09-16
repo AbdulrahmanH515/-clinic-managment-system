@@ -1,6 +1,8 @@
 package org.student_api.clinc_system_management.service;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.student_api.clinc_system_management.dto.Request.PatientRequestDto;
 import org.student_api.clinc_system_management.dto.Response.PatientResponseDto;
 import org.student_api.clinc_system_management.exception.*;
@@ -63,10 +65,8 @@ public class PatientService {
         patientRepository.deleteById(id);
     }
 
-    public List<PatientResponseDto> getAllPatients() {
-        return patientRepository.findAll().stream()
-                .map(this::toResponseDto)
-                .toList();
+    public Page<PatientResponseDto> getAllPatients(Pageable pageable) {
+        return patientRepository.findAll(pageable).map(this::toResponseDto);
     }
 
     public PatientResponseDto getPatientById(UUID id) {

@@ -1,6 +1,8 @@
 package org.student_api.clinc_system_management.controller;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.student_api.clinc_system_management.dto.Request.PatientRequestDto;
 import org.student_api.clinc_system_management.dto.Response.AppointmentResponseDto;
 import org.student_api.clinc_system_management.dto.Response.PatientResponseDto;
@@ -36,10 +38,9 @@ public class PatientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PatientResponseDto>> getAllPatients() {
-        return ResponseEntity.ok(patientService.getAllPatients());
+    public ResponseEntity<Page<PatientResponseDto>> getAllPatients(Pageable pageable) {
+        return ResponseEntity.ok(patientService.getAllPatients(pageable));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<PatientResponseDto> getPatientById(@PathVariable UUID id) {
         return ResponseEntity.ok(patientService.getPatientById(id));

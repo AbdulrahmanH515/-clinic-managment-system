@@ -1,5 +1,7 @@
 package org.student_api.clinc_system_management.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.student_api.clinc_system_management.dto.Request.DoctorRequestDto;
 import org.student_api.clinc_system_management.dto.Response.DoctorResponseDto;
 import org.student_api.clinc_system_management.exception.*;
@@ -58,11 +60,19 @@ public class DoctorService {
         return toResponseDto(saved);
     }
 
-    public List<DoctorResponseDto> getAllDoctors() {
+    public Page<DoctorResponseDto> getAllDoctors(Pageable pageable) {
+        return doctorRepository.findAll(pageable)
+                .map(this::toResponseDto);
+    }
 
-        return doctorRepository.findAll().stream()
-                .map(this::toResponseDto)
-                .toList();
+    public Page<DoctorResponseDto> searchDoctorsByName(String name, Pageable pageable) {
+        return doctorRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name, pageable).map(this::toResponseDto);
+    }
+    public Page<DoctorResponseDto> searchDoctorsBySpecialization(
+            String specialization,
+            Pageable pageable) {
+
+        return doctorRepository.findBySpecializationNameIgnoreCase(specialization, pageable).map(this::toResponseDto);
     }
 
     public DoctorResponseDto getDoctorById(UUID id) {
@@ -73,9 +83,7 @@ public class DoctorService {
         return toResponseDto(doctor);
     }
 
-    public DoctorResponseDto updateDoctor(
-            UUID id,
-            DoctorRequestDto request) {
+    public DoctorResponseDto updateDoctor(UUID id, DoctorRequestDto request) {
 
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException(id));

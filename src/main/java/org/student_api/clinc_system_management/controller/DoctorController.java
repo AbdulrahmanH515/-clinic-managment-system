@@ -1,6 +1,8 @@
 package org.student_api.clinc_system_management.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.student_api.clinc_system_management.dto.Request.AssignSpecializationRequestDto;
 import org.student_api.clinc_system_management.dto.Request.DoctorRequestDto;
@@ -37,11 +39,16 @@ public class DoctorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DoctorResponseDto>> getAllDoctors() {
+    public ResponseEntity<Page<DoctorResponseDto>> getAllDoctors(@RequestParam(required = false) String name, @RequestParam(required = false) String specialization, Pageable pageable) {
 
-        return ResponseEntity.ok(doctorService.getAllDoctors());
+        if (name != null && !name.isBlank()) {
+            return ResponseEntity.ok(doctorService.searchDoctorsByName(name, pageable));
+        }
+        if (specialization != null && !specialization.isBlank()) {
+            return ResponseEntity.ok(doctorService.searchDoctorsBySpecialization(specialization, pageable));
+        }
+        return ResponseEntity.ok(doctorService.getAllDoctors(pageable));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<DoctorResponseDto> getDoctorById(@PathVariable UUID id) {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
