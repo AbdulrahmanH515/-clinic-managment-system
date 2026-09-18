@@ -169,6 +169,38 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
+    @ExceptionHandler(AppointmentNotCompletedException.class)
+    public ResponseEntity<ErrorResponse> handleAppointmentNotCompleted(AppointmentNotCompletedException ex, HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Appointment Not Completed",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(DuplicateMedicalRecordException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateMedicalRecord(DuplicateMedicalRecordException ex, HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Duplicate Medical Record",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(MedicalRecordNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMedicalRecordNotFound(MedicalRecordNotFoundException ex, HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Medical Record Not Found",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
