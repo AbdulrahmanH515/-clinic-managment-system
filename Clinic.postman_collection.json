@@ -1,41 +1,105 @@
 {
   "info": {
-    "_postman_id": "85840659-2de3-456a-8f99-33a49e3ff131",
-    "name": "Clinic",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "56561915",
-    "_collection_link": "https://go.postman.co/collection/56561915-85840659-2de3-456a-8f99-33a49e3ff131?source=collection_link"
+    "name": "Clinic Appointment Management System",
+    "description": "Full API collection covering Assignments 1-15: Specializations, Doctors, Doctor Availability, Patients, Appointments, Medical Records, and Prescriptions. Requests are chained with collection variables (auto-captured via test scripts) so the folders can be run top-to-bottom with the Postman Runner on a fresh (in-memory H2) database.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "specializationId", "value": "" },
+    { "key": "doctorId", "value": "" },
+    { "key": "patientId", "value": "" },
+    { "key": "appointmentId", "value": "" },
+    { "key": "medicalRecordId", "value": "" },
+    { "key": "prescriptionId", "value": "" }
+  ],
   "item": [
     {
-      "name": "Doctors",
+      "name": "1. Specializations",
       "item": [
         {
-          "name": "Create Doctors",
+          "name": "Create Specialization",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('specializationId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\": \"Islam\",\r\n    \"lastName\": \"Masry\",\r\n    \"email\": \"Eslam.doctor@gmail.com\",\r\n    \"phone\": \"01012345678\",\r\n    \"medicalLicenseNumber\": \"DOC-1002\",\r\n    \"yearsOfExperience\": 5,\r\n    \"consultationFee\": 300.00,\r\n    \"specializationId\": \"4ea1279a-5e08-4baa-a61a-8f285b746f9b\"\r\n}\r\n",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n    \"name\": \"Cardiology\",\n    \"description\": \"Heart specialist\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
-            "url": {
-              "raw": "http://localhost:8080/api/doctors",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors"
-              ]
+            "url": { "raw": "{{baseUrl}}/api/specializations", "host": ["{{baseUrl}}"], "path": ["api", "specializations"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Specializations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/specializations", "host": ["{{baseUrl}}"], "path": ["api", "specializations"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specialization By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/specializations/{{specializationId}}", "host": ["{{baseUrl}}"], "path": ["api", "specializations", "{{specializationId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctors By Specialization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/specializations/{{specializationId}}/doctors", "host": ["{{baseUrl}}"], "path": ["api", "specializations", "{{specializationId}}", "doctors"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Doctors",
+      "item": [
+        {
+          "name": "Create Doctor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('doctorId', pm.response.json().id);",
+                  "}"
+                ]
+              }
             }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Sara\",\n    \"lastName\": \"Mostafa\",\n    \"email\": \"sara.mostafa@example.com\",\n    \"phone\": \"01098765432\",\n    \"medicalLicenseNumber\": \"LIC-1001\",\n    \"yearsOfExperience\": 8,\n    \"consultationFee\": 300.00,\n    \"specializationId\": \"{{specializationId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/doctors", "host": ["{{baseUrl}}"], "path": ["api", "doctors"] }
           },
           "response": []
         },
@@ -44,18 +108,7 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/doctors",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors"
-              ]
-            }
+            "url": { "raw": "{{baseUrl}}/api/doctors", "host": ["{{baseUrl}}"], "path": ["api", "doctors"] }
           },
           "response": []
         },
@@ -64,19 +117,7 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/doctors/49a1945e-569d-4418-9819-e0fe71cb863d",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors",
-                "49a1945e-569d-4418-9819-e0fe71cb863d"
-              ]
-            }
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}"] }
           },
           "response": []
         },
@@ -84,39 +125,27 @@
           "name": "Update Doctor",
           "request": {
             "method": "PUT",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/doctors",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors"
-              ]
-            }
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Sara\",\n    \"lastName\": \"Mostafa\",\n    \"email\": \"sara.mostafa@example.com\",\n    \"phone\": \"01098765432\",\n    \"medicalLicenseNumber\": \"LIC-1001\",\n    \"yearsOfExperience\": 9,\n    \"consultationFee\": 350.00,\n    \"specializationId\": \"{{specializationId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}"] }
           },
           "response": []
         },
         {
-          "name": "Delete Doctor",
+          "name": "Assign Specialization",
           "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/doctors",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors"
-              ]
-            }
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"specializationId\": \"{{specializationId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/specialization", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}", "specialization"] }
           },
           "response": []
         },
@@ -126,22 +155,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/api/doctors?specialization=Cardiology",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors"
-              ],
-              "query": [
-                {
-                  "key": "specialization",
-                  "value": "Cardiology"
-                }
-              ]
+              "raw": "{{baseUrl}}/api/doctors?name=Sara",
+              "host": ["{{baseUrl}}"], "path": ["api", "doctors"],
+              "query": [ { "key": "name", "value": "Sara" } ]
             }
           },
           "response": []
@@ -152,115 +168,118 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/api/specializations",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "specializations"
-              ]
+              "raw": "{{baseUrl}}/api/doctors?specialization=Cardiology",
+              "host": ["{{baseUrl}}"], "path": ["api", "doctors"],
+              "query": [ { "key": "specialization", "value": "Cardiology" } ]
             }
           },
           "response": []
         },
         {
-          "name": "Get Doctors With Pagination",
+          "name": "Get Doctors With Pagination & Sorting",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/api/doctors?page=0&size=10&sort=yearsOfExperience,desc",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors"
-              ],
+              "raw": "{{baseUrl}}/api/doctors?page=0&size=10&sort=yearsOfExperience,desc",
+              "host": ["{{baseUrl}}"], "path": ["api", "doctors"],
               "query": [
-                {
-                  "key": "page",
-                  "value": "0"
-                },
-                {
-                  "key": "size",
-                  "value": "10"
-                },
-                {
-                  "key": "sort",
-                  "value": "yearsOfExperience,desc"
-                }
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "sort", "value": "yearsOfExperience,desc" }
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Get Doctors With Sorting",
+          "name": "Get Doctor Appointments",
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/appointments", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}", "appointments"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Doctor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}"] },
+            "description": "Run last / standalone — deletes the doctor used by the rest of the chain."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "Patient",
+      "name": "3. Doctor Availability",
       "item": [
         {
-          "name": "Create Patient",
+          "name": "Add Availability",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\": \"Eslam\",\r\n    \"lastName\": \"Masry\",\r\n    \"email\": \"eslam.patient@gmail.com\",\r\n    \"phone\": \"01012345678\",\r\n    \"dateOfBirth\": \"2000-05-15\",\r\n    \"gender\": \"MALE\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n    \"dayOfWeek\": \"MONDAY\",\n    \"startTime\": \"09:00:00\",\n    \"endTime\": \"17:00:00\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
-            "url": {
-              "raw": "http://localhost:8080/api/patients",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "patients"
-              ]
-            }
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/availability", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}", "availability"] }
           },
           "response": []
         },
         {
-          "name": "Get All Patient",
+          "name": "Get Doctor Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/availability", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}", "availability"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Patients",
+      "item": [
+        {
+          "name": "Create Patient",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('patientId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Ahmed\",\n    \"lastName\": \"Ali\",\n    \"email\": \"ahmed.ali@example.com\",\n    \"phone\": \"01012345678\",\n    \"dateOfBirth\": \"1995-05-10\",\n    \"gender\": \"MALE\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api", "patients"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Patients (Paginated)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/api/patient",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "patient"
-              ]
+              "raw": "{{baseUrl}}/api/patients?page=0&size=10",
+              "host": ["{{baseUrl}}"], "path": ["api", "patients"],
+              "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "10" } ]
             }
           },
           "response": []
@@ -270,18 +289,7 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/patient",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "patient"
-              ]
-            }
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}"] }
           },
           "response": []
         },
@@ -289,216 +297,110 @@
           "name": "Update Patient",
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n    \"firstName\": \"Ahmed\",\n    \"lastName\": \"Ali\",\n    \"email\": \"ahmed.ali@example.com\",\n    \"phone\": \"01099998888\",\n    \"dateOfBirth\": \"1995-05-10\",\n    \"gender\": \"MALE\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
-            "url": {
-              "raw": "http://localhost:8080/api/patient",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "patient"
-              ]
-            }
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}"] }
           },
           "response": []
         },
         {
-          "name": "Delete Patint",
+          "name": "Get Patient Appointments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}/appointments", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}", "appointments"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient Medical Records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}/medical-records", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}", "medical-records"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient Prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}/prescriptions", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}", "prescriptions"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/patient",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "patient"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Patients With Pagination",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Patients With Sorting",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}"] },
+            "description": "Run last / standalone — deletes the patient used by the rest of the chain."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "Doctor Availability",
+      "name": "5. Appointments",
       "item": [
         {
-          "name": "Create Availability",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"dayOfWeek\": \"MONDAY\",\r\n    \"startTime\": \"09:00\",\r\n    \"endTime\": \"12:00\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8080/api/doctors/2756fc27-b748-4a1b-bb97-59b7e6f350ef/availability",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors",
-                "2756fc27-b748-4a1b-bb97-59b7e6f350ef",
-                "availability"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Doctor Availability",
+          "name": "Get Available Slots",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/api/patient/doctorID/availability",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "patient",
-                "doctorID",
-                "availability"
-              ]
+              "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/available-slots?date=2026-09-21",
+              "host": ["{{baseUrl}}"], "path": ["api", "doctors", "{{doctorId}}", "available-slots"],
+              "query": [ { "key": "date", "value": "2026-09-21" } ]
             }
           },
           "response": []
         },
-        {
-          "name": "Update Availability",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Availability",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Appointment",
-      "item": [
         {
           "name": "Create Appointment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('appointmentId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"patientId\": \"a67a4252-33cf-4353-ada3-cc5706b8ce9a\",\r\n    \"doctorId\": \"2756fc27-b748-4a1b-bb97-59b7e6f350ef\",\r\n    \"date\": \"2026-09-21\",\r\n    \"time\": \"10:00:00\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n    \"patientId\": \"{{patientId}}\",\n    \"doctorId\": \"{{doctorId}}\",\n    \"date\": \"2026-09-21\",\n    \"time\": \"10:00:00\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
-            "url": {
-              "raw": "http://localhost:8080/api/appointments",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "appointments"
-              ]
-            }
+            "url": { "raw": "{{baseUrl}}/api/appointments", "host": ["{{baseUrl}}"], "path": ["api", "appointments"] }
           },
           "response": []
         },
         {
-          "name": "Get All Appointments",
+          "name": "Get All Appointments (Filter + Pagination)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/api/appointments?date=2026-09-21&page=0&size=20",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "appointments"
-              ],
+              "raw": "{{baseUrl}}/api/appointments?date=2026-09-21&page=0&size=20",
+              "host": ["{{baseUrl}}"], "path": ["api", "appointments"],
               "query": [
-                {
-                  "key": "date",
-                  "value": "2026-09-21"
-                },
-                {
-                  "key": "page",
-                  "value": "0"
-                },
-                {
-                  "key": "size",
-                  "value": "20"
-                }
+                { "key": "date", "value": "2026-09-21" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
               ]
             }
           },
@@ -509,195 +411,231 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/appointments/88398cfb-7dba-45fe-89f0-47a52849172a",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "appointments",
-                "88398cfb-7dba-45fe-89f0-47a52849172a"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Available Appointment Slots",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:8080/api/doctors/ddeea5d9-506a-4f6b-9a06-1a5d9307adbe/available-slots?date=2026-09-21",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "api",
-                "doctors",
-                "ddeea5d9-506a-4f6b-9a06-1a5d9307adbe",
-                "available-slots"
-              ],
-              "query": [
-                {
-                  "key": "date",
-                  "value": "2026-09-21"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Appointments With Pagination",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Appointments With Sorting",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Filter Appointments By Status",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Filter Appointments By Date",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}"] }
           },
           "response": []
         },
         {
           "name": "Confirm Appointment",
           "request": {
-            "method": "GET",
+            "method": "PATCH",
             "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Cancel Appointment",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/confirm", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "confirm"] }
           },
           "response": []
         },
         {
           "name": "Complete Appointment",
           "request": {
-            "method": "GET",
+            "method": "PATCH",
             "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/complete", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "complete"] }
           },
           "response": []
         },
         {
-          "name": "Mark Appointment As No-Show",
+          "name": "Cancel Appointment",
           "request": {
-            "method": "GET",
+            "method": "PATCH",
             "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/cancel", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "cancel"] },
+            "description": "Only valid from SCHEDULED or CONFIRMED — don't run after Complete in the same chain."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Appointment No-Show",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/no-show", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "no-show"] },
+            "description": "Only valid from SCHEDULED or CONFIRMED — don't run after Complete in the same chain."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "Specializations",
+      "name": "6. Medical Records",
       "item": [
         {
-          "name": "Create Specialization",
+          "name": "Create Medical Record",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('medicalRecordId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"diagnosis\": \"Mild hypertension\",\n    \"treatment\": \"Prescribed lifestyle changes and monitoring\",\n    \"notes\": \"Patient advised to reduce salt intake and follow up in 2 weeks\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/medical-record", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "medical-record"] },
+            "description": "Requires the appointment to be COMPLETED first (see folder 5)."
           },
           "response": []
         },
         {
-          "name": "Get All Specializations",
+          "name": "Get Medical Record By ID",
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/medical-records/{{medicalRecordId}}", "host": ["{{baseUrl}}"], "path": ["api", "medical-records", "{{medicalRecordId}}"] }
           },
           "response": []
         },
         {
-          "name": "Get Specialization By ID",
+          "name": "Get Patient Medical Records",
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": ""
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}/medical-records", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}", "medical-records"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Prescriptions",
+      "item": [
+        {
+          "name": "Create Prescription",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('prescriptionId', pm.response.json().id);",
+                  "}"
+                ]
+              }
             }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"medicationName\": \"Amlodipine\",\n    \"dosage\": \"5mg\",\n    \"frequency\": \"Once daily\",\n    \"duration\": \"30 days\",\n    \"instructions\": \"Take in the morning with food\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/medical-records/{{medicalRecordId}}/prescriptions", "host": ["{{baseUrl}}"], "path": ["api", "medical-records", "{{medicalRecordId}}", "prescriptions"] }
           },
           "response": []
         },
         {
-          "name": "Update Specialization",
+          "name": "Get Prescriptions By Medical Record",
           "request": {
-            "method": "PUT",
+            "method": "GET",
             "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/medical-records/{{medicalRecordId}}/prescriptions", "host": ["{{baseUrl}}"], "path": ["api", "medical-records", "{{medicalRecordId}}", "prescriptions"] }
           },
           "response": []
         },
         {
-          "name": "New Request",
+          "name": "Get Patient Prescriptions",
           "request": {
-            "method": "DELETE",
+            "method": "GET",
             "header": [],
-            "url": {
-              "raw": ""
-            }
+            "url": { "raw": "{{baseUrl}}/api/patients/{{patientId}}/prescriptions", "host": ["{{baseUrl}}"], "path": ["api", "patients", "{{patientId}}", "prescriptions"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Error Handling Examples",
+      "item": [
+        {
+          "name": "Validation Error (Blank First Name)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"Ali\",\n    \"email\": \"bad.patient@example.com\",\n    \"phone\": \"01000000000\",\n    \"dateOfBirth\": \"1995-05-10\",\n    \"gender\": \"MALE\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api", "patients"] },
+            "description": "Expected: 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "Duplicate Email (409)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Ahmed\",\n    \"lastName\": \"Ali\",\n    \"email\": \"ahmed.ali@example.com\",\n    \"phone\": \"01012345678\",\n    \"dateOfBirth\": \"1995-05-10\",\n    \"gender\": \"MALE\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api", "patients"] },
+            "description": "Expected: 409 Conflict — run after 'Create Patient' with the same email."
+          },
+          "response": []
+        },
+        {
+          "name": "Patient Not Found (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/patients/00000000-0000-0000-0000-000000000000", "host": ["{{baseUrl}}"], "path": ["api", "patients", "00000000-0000-0000-0000-000000000000"] },
+            "description": "Expected: 404 Not Found"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Status Transition (409)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/complete", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "complete"] },
+            "description": "Expected: 409 Conflict — call twice in a row (COMPLETED -> COMPLETED is not a valid transition)."
+          },
+          "response": []
+        },
+        {
+          "name": "Medical Record on Non-Completed Appointment (409)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"diagnosis\": \"Test\",\n    \"treatment\": \"Test\",\n    \"notes\": \"Test\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments/00000000-0000-0000-0000-000000000000/medical-record", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "00000000-0000-0000-0000-000000000000", "medical-record"] },
+            "description": "Expected: 404 (unknown appointment) — swap in a real SCHEDULED appointment id to get 409 Appointment Not Completed instead."
+          },
+          "response": []
+        },
+        {
+          "name": "Duplicate Medical Record (409)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"diagnosis\": \"Duplicate test\",\n    \"treatment\": \"test\",\n    \"notes\": \"test\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/medical-record", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}", "medical-record"] },
+            "description": "Expected: 409 Conflict — run after 'Create Medical Record' has already succeeded for this appointment."
           },
           "response": []
         }
