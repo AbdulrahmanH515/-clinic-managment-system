@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.student_api.clinc_system_management.dto.Request.LoginRequestDto;
-import org.student_api.clinc_system_management.dto.Request.RegisterRequestDto;
-import org.student_api.clinc_system_management.dto.Response.AuthResponseDto;
+import org.student_api.clinc_system_management.dto.Response.*;
+import org.student_api.clinc_system_management.dto.Request.*;
 import org.student_api.clinc_system_management.service.AuthService;
 
 @RestController
@@ -27,5 +26,14 @@ public class AuthController {
     public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginRequestDto request) {
         AuthResponseDto response = authService.login(request);
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/register/patient")
+    public ResponseEntity<AuthResponseDto> registerPatient(@Valid @RequestBody PatientRegisterRequestDto request) {
+        return new ResponseEntity<>(authService.registerPatient(request), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/register/doctor")
+    public ResponseEntity<AuthResponseDto> registerDoctor(@Valid @RequestBody DoctorRegisterRequestDto request) {
+        return new ResponseEntity<>(authService.registerDoctor(request), HttpStatus.CREATED);
     }
 }

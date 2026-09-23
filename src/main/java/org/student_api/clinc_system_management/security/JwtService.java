@@ -24,18 +24,26 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String email, String role, String userId) {
+    public String generateToken(String email, String role, String userId, String linkedProfileId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .subject(email)
                 .claim("role", role)
                 .claim("userId", userId)
                 .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .expiration(expiryDate);
+
+        if (linkedProfileId != null) {
+            builder.claim("linkedProfileId", linkedProfileId);
+        }
+
+        return builder.signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+    public String extractLinkedProfileId(String token) {
+        return extractClaim(token, claims -> claims.get("linkedProfileId", String.class));
     }
 
     public String extractEmail(String token) {
