@@ -8,6 +8,7 @@ import org.student_api.clinc_system_management.service.SpecializationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,11 +24,10 @@ public class SpecializationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecializationResponseDto> registerSpecialization(
             @Valid @RequestBody SpecializationRequestDto request) {
-
         SpecializationResponseDto response = specializationService.registerSpecialization(request);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -50,4 +50,5 @@ public class SpecializationController {
 
         return ResponseEntity.ok(specializationService.getDoctorsBySpecialization(id));
     }
+
 }

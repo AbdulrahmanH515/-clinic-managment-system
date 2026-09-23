@@ -8,7 +8,7 @@ spring:
     mapper:
       accept-case-insensitive-enums: true
   datasource:
-    url: jdbc:h2:mem:clinicdb
+    url: jdbc:h2:file:./data/clinicdb
     driver-class-name: org.h2.Driver
     username: sa
     password:

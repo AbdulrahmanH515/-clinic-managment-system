@@ -12,9 +12,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.student_api.clinc_system_management.role.Role;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -41,9 +43,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtService.isTokenValid(token, email)) {
                 String role = jwtService.extractRole(token);
+                String userId = jwtService.extractUserId(token);
+                String linkedProfileId = jwtService.extractLinkedProfileId(token);
+
+                AuthenticatedUser principal = new AuthenticatedUser(
+                        UUID.fromString(userId),
+                        email,
+                        Role.valueOf(role),
+                        linkedProfileId != null ? UUID.fromString(linkedProfileId) : null
+                );
 
                 var authToken = new UsernamePasswordAuthenticationToken(
-                        email,
+                        principal,
                         null,
                         List.of(new SimpleGrantedAuthority("ROLE_" + role))
                 );

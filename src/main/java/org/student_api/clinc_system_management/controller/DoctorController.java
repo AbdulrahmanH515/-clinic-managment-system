@@ -14,7 +14,7 @@ import org.student_api.clinc_system_management.service.DoctorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -33,7 +33,8 @@ public class DoctorController {
     }
 
     @PostMapping
-    public ResponseEntity<DoctorResponseDto> registerDoctor( @Valid @RequestBody DoctorRequestDto request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DoctorResponseDto> registerDoctor(@Valid @RequestBody DoctorRequestDto request) {
         DoctorResponseDto response = doctorService.registerDoctor(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -55,11 +56,13 @@ public class DoctorController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DoctorResponseDto> updateDoctor(@PathVariable UUID id, @Valid @RequestBody DoctorRequestDto request) {
         return ResponseEntity.ok(doctorService.updateDoctor(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteDoctor(@PathVariable UUID id) {
         doctorService.deleteDoctor(id);
 
@@ -67,6 +70,7 @@ public class DoctorController {
     }
 
     @PutMapping("/{id}/specialization")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DoctorResponseDto> assignSpecialization(@PathVariable UUID id, @Valid @RequestBody AssignSpecializationRequestDto request) {
         return ResponseEntity.ok(
                 doctorService.assignSpecialization(id, request.getSpecializationId()));
@@ -85,4 +89,5 @@ public class DoctorController {
     public ResponseEntity<List<LocalTime>> getAvailableSlots(@PathVariable UUID id, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(appointmentService.getAvailableSlots(id, date));
     }
+
 }
