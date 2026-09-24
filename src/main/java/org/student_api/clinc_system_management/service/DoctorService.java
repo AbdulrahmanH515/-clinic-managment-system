@@ -27,9 +27,6 @@ public class DoctorService {
 
     public DoctorResponseDto registerDoctor(DoctorRequestDto request) {
 
-        System.out.println(">>> DEBUG consultationFee = " + request.getConsultationFee());
-        System.out.println(">>> DEBUG request object = " + request);
-
         if (doctorRepository.existsByMedicalLicenseNumber(
                 request.getMedicalLicenseNumber())) {
 
@@ -53,12 +50,9 @@ public class DoctorService {
                 specialization
         );
 
-        System.out.println(">>> DEBUG doctor.getConsultationFee() before save = " + doctor.getConsultationFee());
-
         Doctor saved = doctorRepository.save(doctor);
 
-        return toResponseDto(saved);
-    }
+        return toResponseDto(saved);}
 
     public Page<DoctorResponseDto> getAllDoctors(Pageable pageable) {
         return doctorRepository.findAll(pageable)

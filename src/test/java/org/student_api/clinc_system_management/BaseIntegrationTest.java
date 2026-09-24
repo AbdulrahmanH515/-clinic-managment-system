@@ -26,11 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public abstract class BaseIntegrationTest {
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    protected WebApplicationContext webApplicationContext;
 
     @Autowired
     @Qualifier("springSecurityFilterChain")
-    private Filter springSecurityFilterChain;
+    protected Filter springSecurityFilterChain;
 
     protected final ObjectMapper objectMapper = new ObjectMapper();
 
