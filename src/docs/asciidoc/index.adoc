@@ -1,0 +1,412 @@
+= Clinic System Management API Documentation
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+== Authentication
+
+=== Register Admin
+
+`POST /api/auth/register`
+
+No authentication required. Creates an admin account.
+
+.Request fields
+include::{snippets}/register-admin/request-fields.adoc[]
+
+.Example request
+include::{snippets}/register-admin/http-request.adoc[]
+
+.Response fields
+include::{snippets}/register-admin/response-fields.adoc[]
+
+.Example response
+include::{snippets}/register-admin/http-response.adoc[]
+
+=== Login
+
+`POST /api/auth/login`
+
+No authentication required.
+
+.Request fields
+include::{snippets}/login/request-fields.adoc[]
+
+.Example request
+include::{snippets}/login/http-request.adoc[]
+
+.Response fields
+include::{snippets}/login/response-fields.adoc[]
+
+.Example response
+include::{snippets}/login/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|200
+|Login successful
+
+|401
+|Invalid email or password
+|===
+
+=== Register Patient
+
+`POST /api/auth/register/patient`
+
+No authentication required. Creates both a Patient profile and a linked login account.
+
+.Request fields
+include::{snippets}/register-patient/request-fields.adoc[]
+
+.Example request
+include::{snippets}/register-patient/http-request.adoc[]
+
+.Response fields
+include::{snippets}/register-patient/response-fields.adoc[]
+
+.Example response
+include::{snippets}/register-patient/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Patient registered successfully
+
+|400
+|Validation error
+
+|409
+|Email already registered
+|===
+
+=== Register Doctor
+
+`POST /api/auth/register/doctor`
+
+No authentication required. Creates both a Doctor profile and a linked login account.
+
+.Request fields
+include::{snippets}/register-doctor/request-fields.adoc[]
+
+.Example request
+include::{snippets}/register-doctor/http-request.adoc[]
+
+.Response fields
+include::{snippets}/register-doctor/response-fields.adoc[]
+
+.Example response
+include::{snippets}/register-doctor/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Doctor registered successfully
+
+|400
+|Validation error
+
+|404
+|Specialization not found
+
+|409
+|Email already registered
+|===
+
+== Clinic Management
+
+=== Create Specialization
+
+`POST /api/specializations`
+
+Requires ADMIN role.
+
+.Request headers
+include::{snippets}/create-specialization/request-headers.adoc[]
+
+.Request fields
+include::{snippets}/create-specialization/request-fields.adoc[]
+
+.Example request
+include::{snippets}/create-specialization/http-request.adoc[]
+
+.Response fields
+include::{snippets}/create-specialization/response-fields.adoc[]
+
+.Example response
+include::{snippets}/create-specialization/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Specialization created
+
+|400
+|Validation error
+
+|403
+|Only ADMIN can perform this action
+|===
+
+=== Create Doctor (Admin)
+
+`POST /api/doctors`
+
+Requires ADMIN role. This is a direct-creation endpoint (no login account is created — for that, use Register Doctor above).
+
+.Request headers
+include::{snippets}/create-doctor-by-admin/request-headers.adoc[]
+
+.Request fields
+include::{snippets}/create-doctor-by-admin/request-fields.adoc[]
+
+.Example request
+include::{snippets}/create-doctor-by-admin/http-request.adoc[]
+
+.Response fields
+include::{snippets}/create-doctor-by-admin/response-fields.adoc[]
+
+.Example response
+include::{snippets}/create-doctor-by-admin/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Doctor created
+
+|400
+|Validation error
+
+|403
+|Only ADMIN can perform this action
+
+|404
+|Specialization not found
+|===
+
+=== Add Doctor Availability
+
+`POST /api/doctors/{id}/availability`
+
+Requires authentication (any role).
+
+.Path parameters
+include::{snippets}/add-doctor-availability/path-parameters.adoc[]
+
+.Request headers
+include::{snippets}/add-doctor-availability/request-headers.adoc[]
+
+.Request fields
+include::{snippets}/add-doctor-availability/request-fields.adoc[]
+
+.Example request
+include::{snippets}/add-doctor-availability/http-request.adoc[]
+
+.Response fields
+include::{snippets}/add-doctor-availability/response-fields.adoc[]
+
+.Example response
+include::{snippets}/add-doctor-availability/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Availability added
+
+|400
+|Validation error
+
+|404
+|Doctor not found
+|===
+
+== Patients
+
+=== Get Patient By ID
+
+`GET /api/patients/{id}`
+
+.Path parameters
+include::{snippets}/get-patient-by-id/path-parameters.adoc[]
+
+.Request headers
+include::{snippets}/get-patient-by-id/request-headers.adoc[]
+
+.Example request
+include::{snippets}/get-patient-by-id/http-request.adoc[]
+
+.Response fields
+include::{snippets}/get-patient-by-id/response-fields.adoc[]
+
+.Example response
+include::{snippets}/get-patient-by-id/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|200
+|Patient found
+
+|403
+|Not authorized to view this patient's data
+
+|404
+|Patient not found
+|===
+
+=== Update Patient
+
+`PUT /api/patients/{id}`
+
+.Path parameters
+include::{snippets}/update-patient/path-parameters.adoc[]
+
+.Request headers
+include::{snippets}/update-patient/request-headers.adoc[]
+
+.Request fields
+include::{snippets}/update-patient/request-fields.adoc[]
+
+.Example request
+include::{snippets}/update-patient/http-request.adoc[]
+
+.Response fields
+include::{snippets}/update-patient/response-fields.adoc[]
+
+.Example response
+include::{snippets}/update-patient/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|200
+|Patient updated
+
+|400
+|Validation error
+
+|403
+|Not authorized to modify this patient's data
+
+|404
+|Patient not found
+|===
+
+== Appointments
+
+=== Book Appointment
+
+`POST /api/appointments`
+
+.Request headers
+include::{snippets}/book-appointment/request-headers.adoc[]
+
+.Request fields
+include::{snippets}/book-appointment/request-fields.adoc[]
+
+.Example request
+include::{snippets}/book-appointment/http-request.adoc[]
+
+.Response fields
+include::{snippets}/book-appointment/response-fields.adoc[]
+
+.Example response
+include::{snippets}/book-appointment/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Appointment booked
+
+|403
+|Patients can only book for themselves
+
+|409
+|Doctor or patient already booked at that time, or outside working hours
+|===
+
+=== Cancel Appointment
+
+`PATCH /api/appointments/{id}/cancel`
+
+.Path parameters
+include::{snippets}/cancel-appointment/path-parameters.adoc[]
+
+.Request headers
+include::{snippets}/cancel-appointment/request-headers.adoc[]
+
+.Example request
+include::{snippets}/cancel-appointment/http-request.adoc[]
+
+.Response fields
+include::{snippets}/cancel-appointment/response-fields.adoc[]
+
+.Example response
+include::{snippets}/cancel-appointment/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|200
+|Appointment cancelled
+
+|403
+|Not authorized to cancel this appointment
+
+|409
+|Invalid status transition
+|===
+
+== Medical Records
+
+=== Create Medical Record
+
+`POST /api/appointments/{appointmentId}/medical-record`
+
+Only allowed once the related appointment is COMPLETED. One record per appointment.
+
+.Path parameters
+include::{snippets}/create-medical-record/path-parameters.adoc[]
+
+.Request headers
+include::{snippets}/create-medical-record/request-headers.adoc[]
+
+.Request fields
+include::{snippets}/create-medical-record/request-fields.adoc[]
+
+.Example request
+include::{snippets}/create-medical-record/http-request.adoc[]
+
+.Response fields
+include::{snippets}/create-medical-record/response-fields.adoc[]
+
+.Example response
+include::{snippets}/create-medical-record/http-response.adoc[]
+
+.Status codes
+|===
+|Status |Meaning
+
+|201
+|Medical record created
+
+|409
+|Appointment not completed yet, or a record already exists for it
+|===
