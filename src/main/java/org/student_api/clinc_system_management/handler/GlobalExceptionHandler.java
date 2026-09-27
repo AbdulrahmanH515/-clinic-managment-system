@@ -12,6 +12,8 @@ import org.student_api.clinc_system_management.exception.*;
 import org.springframework.security.access.AccessDeniedException;
 
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
@@ -232,6 +234,54 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(WaitingListNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleWaitingListNotFound(
+            WaitingListNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                List.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateWaitingListException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateWaitingList(
+            DuplicateWaitingListException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                List.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(WaitingListSlotAvailableException.class)
+    public ResponseEntity<ErrorResponse> handleWaitingListSlotAvailable(
+            WaitingListSlotAvailableException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                List.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
